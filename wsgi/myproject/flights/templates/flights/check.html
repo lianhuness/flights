@@ -1,1 +1,179 @@
-<h1> Hello world, check flight </h1>
+{% extends "basic.html" %}
+
+{% block title %} UA Mileage Flight Search {% endblock %}
+
+
+{% block headerblock %}
+    <script type="text/javascript" src="/static/js/airportcode.js"></script> 
+{% endblock %}
+
+{% block content %}
+
+<h1> United Airline Mileage Ticket Search </h1>
+
+
+<script>
+$(document).ready(function() {
+    $("#outputtable").hide();
+
+    $( "#fromPort" ).autocomplete({
+      source: availableTags,
+      autoFocus: true,
+      change: function(event, ui){
+         if(!ui.item)
+         {
+            alert("Invalid airport code. Please choose from list");
+            $( "#fromPort" ).val("");
+            $( "#fromPort" ).focus();
+         }else{
+            setCookie("fromPort", encodeURI($( "#fromPort" ).val()));
+         }
+      },
+    });
+    if(getCookie('fromPort') != "")
+        $("#fromPort").val(decodeURI(getCookie('fromPort')));
+
+    $( "#toPort" ).autocomplete({
+      source: availableTags,
+      autoFocus: true,
+      change: function(event, ui){
+         if(!ui.item)
+         {
+            alert("Invalid airport code. Please choose from list");
+            $( "#toPort" ).val("");
+            $( "#toPort" ).focus();
+         }else{
+            setCookie("toPort", encodeURI($("#toPort").val()));
+         }
+      },
+    });
+    if(getCookie('toPort') != "")
+        $("#toPort").val(decodeURI(getCookie('toPort')));
+      
+    $( '#flightDate').datepicker({ 
+        minDate: 1 ,
+         });
+
+
+    var today = new Date();
+    today.setDate(today.getDate()+1);
+    
+    weeklater = new Date();
+    weeklater.setDate(today.getDate()+7);
+
+    $( "#flightDate" ).datepicker('setDate', today);
+
+    $("#checkbutton").click( function()
+       {
+            var fromPort = $("#fromPort").val();
+            if(fromPort == undefined || fromPort == "")
+            {
+                $("#fromPort").focus();
+                return;
+            }  
+            var toPort = $("#toPort").val();
+            if(toPort == "")
+            {
+                $("#toPort").focus();
+                return;
+            } 
+            if(fromPort == toPort)
+            {
+                $("#toPort").focus();
+                alert("Depart airport cannot be same as destination airport.");
+                return;
+            }
+            $("body").addClass("loading"); 
+            var date =  $("#flightDate").val();
+            var data = { csrfmiddlewaretoken: getCookie('csrftoken'),
+                   fromPort: fromPort, 
+                   toPort: toPort,
+                   date: date,
+                   };
+            function success(response)
+            {
+                $("body").removeClass("loading");
+
+                if(response.length < 100)
+                    alert(response);
+                else{
+                    $("#outputtable").show();
+                    $("#outputtable").find("tr:gt(0)").remove(); // clean all rows
+
+                    // JSON data
+                    obj = JSON.parse(response); 
+                    console.log(obj.length);
+
+                    for(var i = 0; i < obj.length; i++) {
+                        var item = obj[i];
+                        var flight = item['FlightNumber'];
+                        var departTime = item['DepartDateTime'];
+                        var AirportsStopList = getStops(item['AirportsStopList']);
+                        var bestEco = getBestEcomic(item['PricesByColumn']);
+                        var bestBusiness = getBestBusiness(item['PricesByColumn']);
+                        var bestFirst = getBestFirst(item['PricesByColumn']);
+                        
+                        $('#outputtable tr:last').after(
+                            '<tr>' +
+                                '<td>'+flight+'</td>'+
+                                '<td>'+departTime+'</td>'+
+                                '<td>'+AirportsStopList +'</td>'+
+                                '<td>'+bestEco+'</td>'+
+                                '<td>'+bestBusiness+'</td>'+
+                                '<td>'+bestFirst+'</td>'+
+                            '</tr>'
+                            );
+                    }
+                }
+            };   
+            $.ajax({
+              type: "POST",
+              url: "/flights/check/",
+              data: data,
+              success: success,
+          });
+            
+
+       }
+    );
+});
+
+</script>
+
+</br>
+
+  <div class="form-group">
+    <label for="inputlg">From:</label>
+    <input class="form-control input-lg" id="fromPort" type="text",
+    placeholder="Where to you want depart from?" >
+  </div>
+  <div class="form-group">
+    <label for="inputlg">To:</label>
+    <input class="form-control input-lg" id="toPort" type="text" 
+    placeholder="Where to you want fly to?">
+  </div>
+  
+    <div class="form-group">
+    <label for="inputlg"> Flight Date: </label>
+        <input type="text" id="flightDate">
+    
+</br>
+</br>
+ <div class="form-group">
+    <button  class="btn btn-default" id='checkbutton'>Check Flights</button>
+  </div>
+
+<table class="table table-striped table-bordered" id='outputtable'> 
+	<tr>
+		<th> Flight Number </th>
+    <th> Depart Time </th>
+		<th> # Stops </th>
+		<th> Best Economic </th>
+		<th> Best Business </th>
+		<th> Best First </th>
+	</tr>
+</table>
+
+<div class="modal"><!-- Place at bottom of page --></div>
+
+{% endblock %}

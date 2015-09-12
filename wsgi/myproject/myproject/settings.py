@@ -64,11 +64,15 @@ MIDDLEWARE_CLASSES = (
 
 # GETTING-STARTED: change 'myproject' to your project name:
 ROOT_URLCONF = 'myproject.urls'
-
+SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
+print("\n\n\n %s \n\n\n" % SETTINGS_PATH)
+print(os.path.join(SETTINGS_PATH, "templates"))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(SETTINGS_PATH, "templates")
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,6 +84,11 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATE_DIRS = (
+    os.path.join(SETTINGS_PATH, 'templates').replace('\\', '/'),
+)
+
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
@@ -113,4 +122,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(WSGI_DIR, 'static')
+STATIC_ROOT = (os.path.join(WSGI_DIR, 'static'),
+    os.path.join(SETTINGS_PATH, 'media'))
+
