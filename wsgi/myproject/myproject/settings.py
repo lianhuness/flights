@@ -41,6 +41,10 @@ ALLOWED_HOSTS = [
 
 
 # Application definition
+SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
+TEMPLATE_DIRS = (
+    os.path.join(SETTINGS_PATH, 'templates'),
+)
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -50,6 +54,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'flights',
+    'users',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,7 +69,7 @@ MIDDLEWARE_CLASSES = (
 
 # GETTING-STARTED: change 'myproject' to your project name:
 ROOT_URLCONF = 'myproject.urls'
-SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -121,4 +126,6 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 STATIC_ROOT = (os.path.join(WSGI_DIR, 'static'))
+
+
 
