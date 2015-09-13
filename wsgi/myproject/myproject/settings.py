@@ -29,7 +29,7 @@ SECRET_KEY = SECRETS['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
-
+DEBUG = True
 from socket import gethostname
 ALLOWED_HOSTS = [
     'localhost',
@@ -54,6 +54,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'flights',
+    'django.contrib.sites',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -127,4 +129,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = (os.path.join(WSGI_DIR, 'static'))
 
 
-
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
+SITE_ID = 1
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOGIN_REDIRECT_URL='/'

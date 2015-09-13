@@ -21,6 +21,6 @@ urlpatterns = [
 	url(r'^$', 'flights.views.check', name='home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^flights/', include('flights.urls', namespace='flights')),
-    url(r'^users/', include('users.urls', namespace='users')),
-    url(r'^accounts/', include('registration.backends.default.urls')),
+    # url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
 ]
