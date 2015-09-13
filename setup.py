@@ -20,6 +20,7 @@ setup(
         'Django==1.8.4',
         'requests',
         'beautifulsoup4',
+        'django-registration-redux',
     ],
     dependency_links=[
         'https://pypi.python.org/simple/django/'
