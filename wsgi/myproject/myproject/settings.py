@@ -65,8 +65,6 @@ MIDDLEWARE_CLASSES = (
 # GETTING-STARTED: change 'myproject' to your project name:
 ROOT_URLCONF = 'myproject.urls'
 SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
-print("\n\n\n %s \n\n\n" % SETTINGS_PATH)
-print(os.path.join(SETTINGS_PATH, "templates"))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

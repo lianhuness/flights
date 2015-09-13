@@ -10,6 +10,25 @@ import json
 
 import pdb
 
+import utils
 
 def check(request):
-	return render(request, 'flights/check.html')
+	if request.method == "GET":
+		return render(request, 'flights/check.html')
+	else:
+		try:
+			fromPort = request.POST['fromPort']
+			toPort = request.POST['toPort']
+			flightDate = request.POST['date']
+			fromPort = fromPort.split('-')[-1].strip()
+			toPort = toPort.split('-')[-1].strip()
+			
+			day = datetime.datetime.strptime(str(flightDate), "%m/%d/%Y");
+			print(day)
+			data = utils.UAFlight(fromPort, toPort, day)
+			if len(data) is 0:
+				return HttpResponse("No Flight Found")
+			else:
+				return HttpResponse(json.dumps(data))
+		except:
+			return HttpResponse("ERROR here")
