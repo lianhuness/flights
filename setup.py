@@ -24,6 +24,7 @@ setup(
         'django-registration-redux',
     ],
     dependency_links=[
-        'https://pypi.python.org/simple/django/'
+        'https://pypi.python.org/simple/django/',
+        "http://pypi.python.org/pypi/django-registration"
     ],
 )
