@@ -131,6 +131,10 @@ $(document).ready(function() {
               url: "/flights/check/",
               data: data,
               success: success,
+              error: function(jqxh, textStatus,errorMsg){
+                  alert(errorMsg);
+                  $("body").removeClass("loading");
+              },
           });
             
 

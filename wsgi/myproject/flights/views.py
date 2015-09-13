@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import Http404
+from django.views.decorators.csrf import ensure_csrf_cookie, requires_csrf_token
 # Create your views here.
 import datetime
 from datetime import date
@@ -15,6 +16,8 @@ import requests
 import pdb
 import json
 import datetime 
+
+
 
 def UAFlight(origin, destination, day):
     print("Flight check: %s" % day)
@@ -70,7 +73,7 @@ def UAFlight(origin, destination, day):
         output.append(finfo)
     return output
 
-
+@ensure_csrf_cookie
 def check(request):
 	if request.method == "GET":
 		return render(request, 'flights/check.html')
