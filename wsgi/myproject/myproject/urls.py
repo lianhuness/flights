@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^flights/', include('flights.urls', namespace='flights')),
     url(r'^users/', include('users.urls', namespace='users')),
+    url(r'^accounts/', include('registration.backends.default.urls')),
 ]
