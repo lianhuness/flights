@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib import auth
 
 urlpatterns = [
-	url(r'^$', 'flights.views.check', name='home'),
+	url(r'^$', 'flights.views.index', name='home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^flights/', include('flights.urls', namespace='flights')),
     # url(r'^accounts/', include('registration.backends.default.urls')),

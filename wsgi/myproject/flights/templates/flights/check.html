@@ -132,6 +132,7 @@ $(document).ready(function() {
               data: data,
               success: success,
               error: function(jqxh, textStatus,errorMsg){
+                  alert(textStatus);
                   alert(errorMsg);
                   $("body").removeClass("loading");
               },
@@ -145,28 +146,42 @@ $(document).ready(function() {
 </script>
 
 </br>
+  {% if user.is_authenticated %}
+  {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+  <form action="/flights/createsubscriber" method="post">
+  {% csrf_token %}
+  {% endif %}
 
   <div class="form-group">
     <label for="inputlg">From:</label>
-    <input class="form-control input-lg" id="fromPort" type="text",
+    <input class="form-control input-lg" name="fromPort" id="fromPort" type="text",
     placeholder="Where to you want depart from?" >
   </div>
   <div class="form-group">
     <label for="inputlg">To:</label>
-    <input class="form-control input-lg" id="toPort" type="text" 
+    <input class="form-control input-lg" name="toPort" id="toPort" type="text" 
     placeholder="Where to you want fly to?">
   </div>
   
     <div class="form-group">
     <label for="inputlg"> Flight Date: </label>
-        <input type="text" id="flightDate">
-    
-</br>
-</br>
- <div class="form-group">
+        <input type="text" name="flightDate" id="flightDate">
+    </div>
+
+  
+
+  {% if user.is_authenticated %}
+    <div class="form-group">
+    <input  class="btn btn-default" type="submit" type="button" value="Create Alert" />
+  </div>
+  </form>
+  {% endif %}
+
+<div class="form-group">
     <button  class="btn btn-default" id='checkbutton'>Check Flights</button>
   </div>
-
+  
 <table class="table table-striped table-bordered" id='outputtable'> 
 	<tr>
 		<th> Flight Number </th>

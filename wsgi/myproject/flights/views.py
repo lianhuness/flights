@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import Http404
 from django.views.decorators.csrf import ensure_csrf_cookie, requires_csrf_token
+from django.db import IntegrityError
 # Create your views here.
 import datetime
 from datetime import date
@@ -72,6 +73,33 @@ def UAFlight(origin, destination, day):
         finfo['rawData'] = json.dumps(flight)
         output.append(finfo)
     return output
+
+def index(request):
+    if request.user.is_authenticated() and request.user.subscriber_set.count() > 0:
+        return render(request, 'flights/index.html')
+    else:
+        return redirect('/flights/check')
+
+
+def createsubscriber(request):
+    try:
+        user = request.user
+        startDate = datetime.datetime.strptime(str(request.POST['flightDate']), "%m/%d/%Y").date()
+        endDate = startDate + datetime.timedelta(days=5)
+
+        user.subscriber_set.create(status='ACTIVE', fromAirport=request.POST['fromPort'], toAirport=request.POST['toPort'], startDate=startDate, endDate=endDate)
+    except (KeyError):
+        # Redisplay the question voting form.
+        return render(request, 'flights/check.html', {
+            'error_message': "Key Error .",
+        })
+    except (IntegrityError):
+        # Redisplay the question voting form.
+        return render(request, 'flights/check.html', {
+            'error_message': "Error in crerating.",
+        })
+    else:
+        return redirect('/')
 
 @ensure_csrf_cookie
 def check(request):

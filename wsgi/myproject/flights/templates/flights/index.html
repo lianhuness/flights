@@ -1,0 +1,42 @@
+{% extends "basic.html" %}
+
+{% block title %} My Subscriber - {{ user.username }} {% endblock %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    function testAlert(msg)
+{
+	alert(msg);
+}
+
+
+});
+
+</script>
+{% block content %}
+
+<h1> My UA Mileage ticket subscriber list </h1>
+<p> <a href='/flights/check'> Create New Alerts </a> </p> 
+{% if user.subscriber_set.count %}
+<table class="table"> 
+<tr>
+<th> Flight </th> 
+<th> From </th> 
+<th> To </th>
+<th> Status </th>
+<th> Action </th>
+</tr> 
+
+{% for subscriber in user.subscriber_set.all %} 
+  <tr>
+    <td> <a href='/flights/check'>{{ subscriber.fromAirport }} - {{ subscriber.toAirport }}</a>  </td>
+    <td> {{ subscriber.startDate }} </td>
+    <td> {{ subscriber.endDate }} </td> 
+    <td> {{ subscriber.status }} </td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endif %} 
+{% endblock %}
