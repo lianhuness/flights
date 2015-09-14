@@ -10,7 +10,7 @@ if [ ! -f "$OPENSHIFT_DATA_DIR"secrets.json ]; then
 fi
 
 echo "Executing 'python ${OPENSHIFT_REPO_DIR}mywebsite/manage.py syncdb --noinput'"
-python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py syncdb --noinput
+python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py syncdb 
 
 
 # GETTING-STARTED: change 'myproject' to your project name:
